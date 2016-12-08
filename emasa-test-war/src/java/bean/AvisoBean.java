@@ -53,20 +53,19 @@ public class AvisoBean implements Serializable {
     private String posicionGPS;
     private String tipo;
     private String Usuario;
-    
+
     private String contador;
     private List<Aviso> listaAvisos;
     private Aviso avisoEditado;
     private int idBuscada;
-    
+
     /**
      * Creates a new instance of AvisoBean
      */
     public AvisoBean() {
     }
-    
-    public String cargar()
-    {
+
+    public String cargar() {
         return "aviso";
     }
 
@@ -213,14 +212,12 @@ public class AvisoBean implements Serializable {
     public void setContador(String contador) {
         this.contador = contador;
     }
-    
-    public void desplegarCreacion()
-    {
-        this.desplegarCreacion=!desplegarCreacion;
+
+    public void desplegarCreacion() {
+        this.desplegarCreacion = !desplegarCreacion;
     }
-    
-    public String creacionAviso()
-    {
+
+    public String creacionAviso() {
         Aviso nuevoAviso = new Aviso();
         //asignamos fecha
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
@@ -245,25 +242,21 @@ public class AvisoBean implements Serializable {
         usuario.setEmail(user.getEmail());
         usuario.setOperador(user.isOperador());
         nuevoAviso.setUsuarioemail(usuario);
-        
-        if (avisoEditado==null)
-        {    
+
+        if (avisoEditado == null) {
             create(nuevoAviso);
-        }
-        else
-        {
+        } else {
             nuevoAviso.setId(avisoEditado.getId());
             edit(nuevoAviso);
         }
         desplegarCreacion(); //ocultamos los controles de creación
         doListar();
-        avisoEditado=null;
+        avisoEditado = null;
         ponerParametrosaNull();
         return "aviso";
     }
-    
-    public void contar()
-    {
+
+    public void contar() {
         contador = Integer.toString(count());
     }
 
@@ -287,42 +280,36 @@ public class AvisoBean implements Serializable {
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.count();
     }
-    
+
     @PostConstruct
-    public void doListar()
-    {
+    public void doListar() {
         listaAvisos = this.findAll();
     }
-    
-    public String doEditar(Aviso aviso)
-    {
-        avisoEditado=aviso;
-        desplegarCreacion=true;
+
+    public String doEditar(Aviso aviso) {
+        avisoEditado = aviso;
+        desplegarCreacion = true;
         Usuario = aviso.getUsuarioemail().getEmail();
         estado = aviso.getEstado();
-        if (aviso.getFinReparacion()!=null)
-        {
+        if (aviso.getFinReparacion() != null) {
             finReparacionAnio = Integer.toString(aviso.getFechacreacion().getYear());
             finReparacionMes = Integer.toString(aviso.getFinReparacion().getMonth());
             finReparacionDia = Integer.toString(aviso.getFinReparacion().getDay());
         }
-        if (aviso.getInicioReparacion()!=null)
-        {
+        if (aviso.getInicioReparacion() != null) {
             inicioReparacionAnio = Integer.toString(aviso.getInicioReparacion().getYear());
             inicioReparacionMes = Integer.toString(aviso.getInicioReparacion().getMonth());
             inicioReparacionDia = Integer.toString(aviso.getInicioReparacion().getDay());
         }
         observaciones = aviso.getObservaciones();
         ubicacionTecnica = aviso.getUbicacionTecnica();
-        if (aviso.getPrioridad()!=null)
-        {
+        if (aviso.getPrioridad() != null) {
             prioridad = Integer.toString(aviso.getPrioridad());
         }
         posicionGPS = aviso.getPosGPS();
         tipo = aviso.getTipo();
         ubicacion = aviso.getUbicacion();
-        
-        
+
         return "aviso";
     }
 
@@ -341,10 +328,10 @@ public class AvisoBean implements Serializable {
     }
 
     private void ponerParametrosaNull() {
-        avisoEditado=null;
-        desplegarCreacion=false;
+        avisoEditado = null;
+        desplegarCreacion = false;
         estado = null;
-        
+
         finReparacionAnio = null;
         finReparacionMes = null;
         finReparacionDia = null;
@@ -352,18 +339,18 @@ public class AvisoBean implements Serializable {
         inicioReparacionAnio = null;
         inicioReparacionMes = null;
         inicioReparacionDia = null;
-        
+
         observaciones = null;
         ubicacionTecnica = null;
         prioridad = null;
-        
+
         posicionGPS = null;
         tipo = null;
         ubicacion = null;
         Usuario = null;
     }
-    
-        public String borrarAviso(Aviso aviso){
+
+    public String borrarAviso(Aviso aviso) {
         remove(aviso);
         return "aviso";
     }
@@ -374,9 +361,14 @@ public class AvisoBean implements Serializable {
         avisows.AvisoWS port = service.getAvisoWSPort();
         port.remove(entity);
     }
-    
-    public String mostrarAvisosUsuario(){
-        listaAvisos = findAvisoPorUsuario(Usuario);
+
+    public String mostrarAvisosUsuario() {
+        if (Usuario.isEmpty()) {
+            listaAvisos = findAll();
+        } else {
+            listaAvisos = findAvisoPorUsuario(Usuario);
+        }
+
         return "aviso";
     }
 
@@ -386,14 +378,17 @@ public class AvisoBean implements Serializable {
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.findAvisoPorUsuario(s);
     }
-    
-    public String buscarAvisosPorTipo(){
-        listaAvisos = findAvisoPorTipo(tipo);
+
+    public String buscarAvisosPorTipo() {
+        if (tipo.isEmpty()) {
+            listaAvisos = findAll();
+        } else {
+            listaAvisos = findAvisoPorTipo(tipo);
+        }
         return "aviso";
     }
-    
-    public String buscarAvisosPorId()
-    {
+
+    public String buscarAvisosPorId() {
         listaAvisos = new ArrayList<Aviso>();
         listaAvisos.add(find_1(idBuscada));
         return "aviso";
@@ -405,10 +400,14 @@ public class AvisoBean implements Serializable {
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.findAvisoPorTipo(s);
     }
-    
-    public String buscarAvisosPorPrioridad(){
-        int p = Integer.parseInt(prioridad);
-        listaAvisos = findAvisoPorPrioridad(p);
+
+    public String buscarAvisosPorPrioridad() {
+        if (prioridad.isEmpty()) {
+            listaAvisos = findAll();
+        } else {
+            int p = Integer.parseInt(prioridad);
+            listaAvisos = findAvisoPorPrioridad(p);
+        }
         return "aviso";
     }
 
@@ -418,9 +417,13 @@ public class AvisoBean implements Serializable {
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.findAvisoPorPrioridad(s);
     }
-    
-    public String buscarAvisosPorEstado(){
-        listaAvisos = findAvisoPorEstado(estado);
+
+    public String buscarAvisosPorEstado() {
+        if (estado.isEmpty()) {
+            listaAvisos = findAll();
+        } else {
+            listaAvisos = findAvisoPorEstado(estado);
+        }
         return "aviso";
     }
 
