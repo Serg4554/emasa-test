@@ -12,6 +12,7 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -56,6 +57,7 @@ public class AvisoBean implements Serializable {
     private String contador;
     private List<Aviso> listaAvisos;
     private Aviso avisoEditado;
+    private int idBuscada;
     
     /**
      * Creates a new instance of AvisoBean
@@ -118,6 +120,14 @@ public class AvisoBean implements Serializable {
 
     public String getInicioReparacionDia() {
         return inicioReparacionDia;
+    }
+
+    public int getIdBuscada() {
+        return idBuscada;
+    }
+
+    public void setIdBuscada(int idBuscada) {
+        this.idBuscada = idBuscada;
     }
 
     public void setInicioReparacionDia(String inicioReparacionDia) {
@@ -350,6 +360,7 @@ public class AvisoBean implements Serializable {
         posicionGPS = null;
         tipo = null;
         ubicacion = null;
+        Usuario = null;
     }
     
         public String borrarAviso(Aviso aviso){
@@ -366,7 +377,7 @@ public class AvisoBean implements Serializable {
     
     public String mostrarAvisosUsuario(){
         listaAvisos = findAvisoPorUsuario(Usuario);
-        return "avisosUsuario";
+        return "aviso";
     }
 
     private java.util.List<avisows.Aviso> findAvisoPorUsuario(java.lang.String s) {
@@ -378,7 +389,14 @@ public class AvisoBean implements Serializable {
     
     public String buscarAvisosPorTipo(){
         listaAvisos = findAvisoPorTipo(tipo);
-        return "avisosTipo";
+        return "aviso";
+    }
+    
+    public String buscarAvisosPorId()
+    {
+        listaAvisos = new ArrayList<Aviso>();
+        listaAvisos.add(find_1(idBuscada));
+        return "aviso";
     }
 
     private java.util.List<avisows.Aviso> findAvisoPorTipo(java.lang.String s) {
@@ -391,7 +409,7 @@ public class AvisoBean implements Serializable {
     public String buscarAvisosPorPrioridad(){
         int p = Integer.parseInt(prioridad);
         listaAvisos = findAvisoPorPrioridad(p);
-        return "avisosPrioridad";
+        return "aviso";
     }
 
     private java.util.List<avisows.Aviso> findAvisoPorPrioridad(int s) {
@@ -403,7 +421,7 @@ public class AvisoBean implements Serializable {
     
     public String buscarAvisosPorEstado(){
         listaAvisos = findAvisoPorEstado(estado);
-        return "avisosEstado";
+        return "aviso";
     }
 
     private java.util.List<avisows.Aviso> findAvisoPorEstado(java.lang.String s) {
@@ -411,5 +429,12 @@ public class AvisoBean implements Serializable {
         // If the calling of port operations may lead to race condition some synchronization is required.
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.findAvisoPorEstado(s);
+    }
+
+    private Aviso find_1(java.lang.Object id) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.find(id);
     }
 }

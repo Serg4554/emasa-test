@@ -125,7 +125,9 @@
                 <h:inputText a:placeholder="prioridad" value="#{avisoBean.prioridad}"/><h:commandButton action="#{avisoBean.buscarAvisosPorPrioridad()}" value="Buscar avisos por prioridad"/><br/>
                 <h:inputText a:placeholder="tipo" value="#{avisoBean.tipo}"/> <h:commandButton action="#{avisoBean.buscarAvisosPorTipo()}" value="Buscar avisos por tipo"/><br/>
                 <h:inputText a:placeholder="email de usuario" value="#{avisoBean.usuario}"/> <h:commandButton action="#{avisoBean.mostrarAvisosUsuario()}" value="Buscar avisos por usuario"/><br/>
-            
+                <h:inputText a:placeholder="Id aviso" value="#{avisoBean.idBuscada}"/>
+                <h:commandButton action="#{avisoBean.buscarAvisosPorId()}" value="Buscar avisos por id"/><br/>
+                <h:commandButton action="#{avisoBean.doListar()}" value="Todos los avisos"/><br/>
         </h:form>
     </h:body>
 </html>
