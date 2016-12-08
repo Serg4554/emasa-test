@@ -5,9 +5,20 @@
  */
 package bean;
 
+import avisows.Aviso;
+import avisows.AvisoWS_Service;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.ws.WebServiceRef;
+import usuariows.Usuario;
+import usuariows.UsuarioWS_Service;
 
 /**
  *
@@ -17,21 +28,29 @@ import java.io.Serializable;
 @SessionScoped
 public class AvisoBean implements Serializable {
 
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/Emasa-Soap-war/UsuarioWS.wsdl")
+    private UsuarioWS_Service service_1;
+
+    @WebServiceRef(wsdlLocation = "WEB-INF/wsdl/localhost_8080/Emasa-Soap-war/AvisoWS.wsdl")
+    private AvisoWS_Service service;
+
     boolean desplegarCreacion;
     //parametros necesarios para crear un aviso
-    String ubicacion;
-    String estado;
-    String observaciones;
-    String ubicacionTecnica;
-    String prioridad;
-    String inicioReparacionDia;
-    String inicioReparacionMes;
-    String inicioReparacionAnio;
-    String finReparacionDia;
-    String finReparacionMes;
-    String finReparacionAnio;
-    String posicionGPS;
-    String tipo;
+    private String ubicacion;
+    private String estado;
+    private String observaciones;
+    private String ubicacionTecnica;
+    private String prioridad;
+    private String inicioReparacionDia;
+    private String inicioReparacionMes;
+    private String inicioReparacionAnio;
+    private String finReparacionDia;
+    private String finReparacionMes;
+    private String finReparacionAnio;
+    private String posicionGPS;
+    private String tipo;
+    private String Usuario;
+    private String contador;
     
     
     /**
@@ -156,9 +175,83 @@ public class AvisoBean implements Serializable {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    public String getUsuario() {
+        return Usuario;
+    }
+
+    public void setUsuario(String Usuario) {
+        this.Usuario = Usuario;
+    }
+
+    public String getContador() {
+        return contador;
+    }
+
+    public void setContador(String contador) {
+        this.contador = contador;
+    }
     
     public void desplegarCreacion()
     {
         this.desplegarCreacion=!desplegarCreacion;
+    }
+    
+    public String creacionAviso()
+    {
+        Aviso nuevoAviso = new Aviso();
+        //asignamos fecha
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy");
+        formatter.applyPattern("dd-MM-yyyy");
+        Date fecha = new Date();
+        try {
+            GregorianCalendar c = new GregorianCalendar();
+            c.setTime(fecha);
+            nuevoAviso.setFechacreacion(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));
+        } catch (DatatypeConfigurationException e) {
+
+        }
+        nuevoAviso.setEstado(estado);
+        nuevoAviso.setObservaciones(observaciones);
+        nuevoAviso.setTipo(tipo);
+        nuevoAviso.setPosGPS(posicionGPS);
+        nuevoAviso.setPrioridad(Integer.parseInt(prioridad));
+        nuevoAviso.setUbicacion(ubicacion);
+        nuevoAviso.setUbicacionTecnica(ubicacionTecnica);
+        usuariows.Usuario user = find(Usuario);
+        avisows.Usuario usuario = new avisows.Usuario();
+        usuario.setEmail(user.getEmail());
+        usuario.setOperador(user.isOperador());
+        nuevoAviso.setUsuarioemail(usuario);
+        
+        create(nuevoAviso);
+        desplegarCreacion(); //ocultamos los controles de creación
+        return "aviso";
+    }
+    
+    public void contar()
+    {
+        contador = Integer.toString(count());
+    }
+
+    private void create(avisows.Aviso entity) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        port.create(entity);
+    }
+
+    private Usuario find(java.lang.Object id) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        usuariows.UsuarioWS port = service_1.getUsuarioWSPort();
+        return port.find(id);
+    }
+
+    private int count() {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.count();
     }
 }
