@@ -2,7 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
     <h:head>
         <title>Probando Avisos</title>
     </h:head>
@@ -113,7 +114,17 @@
                         </f:facet>
                         <h:commandButton action="#{avisoBean.doEditar(aviso)}" value="Editar"/> 
                     </h:column>
-                </h:dataTable>
+                <h:column>
+                    <f:facet name = "header">
+                        Borrar
+                    </f:facet>
+                    <h:commandButton action="#{avisoBean.borrarAviso(aviso)}" value="Borrar"/>
+                </h:column>
+                </h:dataTable><br/>
+                <h:inputText a:placeholder="estado" value="#{avisoBean.estado}"/><h:commandButton action="#{avisoBean.buscarAvisosPorEstado()}" value="Buscar avisos por estado"/><br/>
+                <h:inputText a:placeholder="prioridad" value="#{avisoBean.prioridad}"/><h:commandButton action="#{avisoBean.buscarAvisosPorPrioridad()}" value="Buscar avisos por prioridad"/><br/>
+                <h:inputText a:placeholder="tipo" value="#{avisoBean.tipo}"/> <h:commandButton action="#{avisoBean.buscarAvisosPorTipo()}" value="Buscar avisos por tipo"/><br/>
+                <h:inputText a:placeholder="email de usuario" value="#{avisoBean.usuario}"/> <h:commandButton action="#{avisoBean.mostrarAvisosUsuario()}" value="Buscar avisos por usuario"/><br/>
             
         </h:form>
     </h:body>

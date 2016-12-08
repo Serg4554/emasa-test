@@ -351,4 +351,65 @@ public class AvisoBean implements Serializable {
         tipo = null;
         ubicacion = null;
     }
+    
+        public String borrarAviso(Aviso aviso){
+        remove(aviso);
+        return "aviso";
+    }
+
+    private void remove(avisows.Aviso entity) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        port.remove(entity);
+    }
+    
+    public String mostrarAvisosUsuario(){
+        listaAvisos = findAvisoPorUsuario(Usuario);
+        return "avisosUsuario";
+    }
+
+    private java.util.List<avisows.Aviso> findAvisoPorUsuario(java.lang.String s) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.findAvisoPorUsuario(s);
+    }
+    
+    public String buscarAvisosPorTipo(){
+        listaAvisos = findAvisoPorTipo(tipo);
+        return "avisosTipo";
+    }
+
+    private java.util.List<avisows.Aviso> findAvisoPorTipo(java.lang.String s) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.findAvisoPorTipo(s);
+    }
+    
+    public String buscarAvisosPorPrioridad(){
+        int p = Integer.parseInt(prioridad);
+        listaAvisos = findAvisoPorPrioridad(p);
+        return "avisosPrioridad";
+    }
+
+    private java.util.List<avisows.Aviso> findAvisoPorPrioridad(int s) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.findAvisoPorPrioridad(s);
+    }
+    
+    public String buscarAvisosPorEstado(){
+        listaAvisos = findAvisoPorEstado(estado);
+        return "avisosEstado";
+    }
+
+    private java.util.List<avisows.Aviso> findAvisoPorEstado(java.lang.String s) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.findAvisoPorEstado(s);
+    }
 }
