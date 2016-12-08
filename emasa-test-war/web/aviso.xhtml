@@ -7,8 +7,29 @@
     </h:head>
     <h:body>
         <h:form>
-            <h:commandButton action="Crear Aviso" value="Crear Aviso"/>
-            
+            <h:commandButton action="#{avisoBean.desplegarCreacion()}" value="Crear Aviso"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Ubicacion"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.ubicacion}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Estado"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.estado}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Observacion"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.observaciones}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Ubicacion Técnica"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.ubicacionTecnica}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Prioridad"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.prioridad}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Inicio Reparacion"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.inicioReparacionDia}"/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="/"/>
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.inicioReparacionMes}"/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="/"/>
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.inicioReparacionAnio}"/><br/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Fin Reparacion"/>   
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.finReparacionDia}"/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="/"/>
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.finReparacionMes}"/>
+            <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="/"/>
+            <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.finReparacionAnio}"/><br/>
             
         </h:form>
     </h:body>
