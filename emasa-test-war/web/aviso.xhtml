@@ -37,10 +37,10 @@
             <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.tipo}"/><br/>
             <h:outputLabel rendered="#{avisoBean.desplegarCreacion}" value="Usuario (debe existir en la bd)"/>   
             <h:inputText rendered="#{avisoBean.desplegarCreacion}" value="#{avisoBean.usuario}"/><br/>
-            <h:commandButton rendered="#{avisoBean.desplegarCreacion}" action="#{avisoBean.creacionAviso()}" value="Enviar Datos"/>
+            <h:commandButton rendered="#{avisoBean.desplegarCreacion}" action="#{avisoBean.creacionAviso()}" value="Enviar Datos"/><br/>
             <h:commandButton action="#{avisoBean.contar()}" value="Count"/>&nbsp;&nbsp;&nbsp;<h:outputLabel value="#{avisoBean.contador}"/>
             
-            <h:dataTable value="#{controlBean.listaAvisosUsuario}" var="aviso"  border="2"  cellspacing="2">
+            <h:dataTable value="#{avisoBean.listaAvisos}" var="aviso"  border="2"  cellspacing="2">
                     <h:column>
                         <f:facet name="header">
                             ID
@@ -111,8 +111,7 @@
                         <f:facet name="header">
                             Editar
                         </f:facet>
-                        <h:commandButton action="#{controlBean.verAviso(aviso)}" value="Detalles"/>
-                        
+                        <h:commandButton action="#{avisoBean.doEditar(aviso)}" value="Editar"/> 
                     </h:column>
                 </h:dataTable>
             

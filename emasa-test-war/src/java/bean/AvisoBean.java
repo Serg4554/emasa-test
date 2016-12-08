@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.ws.WebServiceRef;
@@ -50,8 +52,10 @@ public class AvisoBean implements Serializable {
     private String posicionGPS;
     private String tipo;
     private String Usuario;
-    private String contador;
     
+    private String contador;
+    private List<Aviso> listaAvisos;
+    private Aviso avisoEditado;
     
     /**
      * Creates a new instance of AvisoBean
@@ -188,6 +192,14 @@ public class AvisoBean implements Serializable {
         return contador;
     }
 
+    public List<Aviso> getListaAvisos() {
+        return listaAvisos;
+    }
+
+    public void setListaAvisos(List<Aviso> listaAvisos) {
+        this.listaAvisos = listaAvisos;
+    }
+
     public void setContador(String contador) {
         this.contador = contador;
     }
@@ -224,8 +236,19 @@ public class AvisoBean implements Serializable {
         usuario.setOperador(user.isOperador());
         nuevoAviso.setUsuarioemail(usuario);
         
-        create(nuevoAviso);
+        if (avisoEditado==null)
+        {    
+            create(nuevoAviso);
+        }
+        else
+        {
+            nuevoAviso.setId(avisoEditado.getId());
+            edit(nuevoAviso);
+        }
         desplegarCreacion(); //ocultamos los controles de creación
+        doListar();
+        avisoEditado=null;
+        ponerParametrosaNull();
         return "aviso";
     }
     
@@ -253,5 +276,79 @@ public class AvisoBean implements Serializable {
         // If the calling of port operations may lead to race condition some synchronization is required.
         avisows.AvisoWS port = service.getAvisoWSPort();
         return port.count();
+    }
+    
+    @PostConstruct
+    public void doListar()
+    {
+        listaAvisos = this.findAll();
+    }
+    
+    public String doEditar(Aviso aviso)
+    {
+        avisoEditado=aviso;
+        desplegarCreacion=true;
+        Usuario = aviso.getUsuarioemail().getEmail();
+        estado = aviso.getEstado();
+        if (aviso.getFinReparacion()!=null)
+        {
+            finReparacionAnio = Integer.toString(aviso.getFechacreacion().getYear());
+            finReparacionMes = Integer.toString(aviso.getFinReparacion().getMonth());
+            finReparacionDia = Integer.toString(aviso.getFinReparacion().getDay());
+        }
+        if (aviso.getInicioReparacion()!=null)
+        {
+            inicioReparacionAnio = Integer.toString(aviso.getInicioReparacion().getYear());
+            inicioReparacionMes = Integer.toString(aviso.getInicioReparacion().getMonth());
+            inicioReparacionDia = Integer.toString(aviso.getInicioReparacion().getDay());
+        }
+        observaciones = aviso.getObservaciones();
+        ubicacionTecnica = aviso.getUbicacionTecnica();
+        if (aviso.getPrioridad()!=null)
+        {
+            prioridad = Integer.toString(aviso.getPrioridad());
+        }
+        posicionGPS = aviso.getPosGPS();
+        tipo = aviso.getTipo();
+        ubicacion = aviso.getUbicacion();
+        
+        
+        return "aviso";
+    }
+
+    private java.util.List<avisows.Aviso> findAll() {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        return port.findAll();
+    }
+
+    private void edit(avisows.Aviso entity) {
+        // Note that the injected javax.xml.ws.Service reference as well as port objects are not thread safe.
+        // If the calling of port operations may lead to race condition some synchronization is required.
+        avisows.AvisoWS port = service.getAvisoWSPort();
+        port.edit(entity);
+    }
+
+    private void ponerParametrosaNull() {
+        avisoEditado=null;
+        desplegarCreacion=false;
+        estado = null;
+        
+        finReparacionAnio = null;
+        finReparacionMes = null;
+        finReparacionDia = null;
+
+        inicioReparacionAnio = null;
+        inicioReparacionMes = null;
+        inicioReparacionDia = null;
+        
+        observaciones = null;
+        ubicacionTecnica = null;
+        prioridad = null;
+        
+        posicionGPS = null;
+        tipo = null;
+        ubicacion = null;
     }
 }
